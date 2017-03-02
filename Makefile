@@ -6,76 +6,26 @@
 #    By: amaitre <amaitre@student.42.fr>            +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2015/11/25 12:19:31 by amaitre           #+#    #+#              #
-#    Updated: 2016/11/29 14:10:20 by dmathe           ###   ########.fr        #
+#    Updated: 2017/02/13 17:19:55 by amaitre          ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME		=	corewar
+all:
+	@make -C asmdir/
+	@make -C vm/
 
-SRC			=	src/main.c
-SRC			+=	src/init.c
-SRC			+=	src/corewar.c
-SRC			+=	src/encodage.c
-SRC			+=	src/opcode.c
-SRC			+=	src/opcode2.c
-SRC			+=	src/opcode3.c
-SRC			+=	src/opcode4.c
-SRC			+=	src/check_param_op.c
-SRC			+=	src/get_function.c
-SRC			+=	src/lst_function.c
-SRC			+=	src/fill_instructions.c
-SRC			+=	src/distrib_function.c
-SRC			+=	src/norme.c
-SRC			+=	src/create_mem.c
-SRC			+=	src/vm_loop.c
-SRC			+=	src/redirect_function.c
+re: fclean all
 
-SRCO		=	$(SRC:.c=.o)
-HEADERSLIB	=	libftprintf/includes
-HEADERS		=	includes
-CC			=	gcc
-CFLAGS		=	-Wall -Wextra -Werror
+asm:
+	@make -C asmdir/
 
-all: logo $(NAME)
+clean:
+	@make clean -C asmdir/
+	@make clean -C vm/
 
-logo:
-	@echo "\033[36m\n\
-			        :::      ::::::::\n\
-			       :+:      :+:    :+:\n\
-			     +:+ +:+         +:+\n\
-			   +#+  +:+       +#+\n\
-			 +#+#+#+#+#+   +#+\n\
-			      #+#    #+#\n\
-			     ###   ########.fr\n\
-			    			$(NAME) \033[0m"
+fclean:
+	@make fclean -C asmdir/
+	@make fclean -C vm/
 
-re: logo fclean all
-
-%.o: %.c $(HEADERS)/$(NAME).h $(HEADERS)/struct.h $(HEADERS)/function.h $(HEADERS)/define.h
-	@echo "\033[32mCorewar :\033[0m [Compilation:\033[33m $@\033[0m]"
-	@$(CC) -o $@ -c $< $(CFLAGS) -I $(HEADERSLIB) -I $(HEADERS)
-
-$(NAME): $(SRCO)
-	@make -C libftprintf/
-	@$(CC)  $(CFLAGS) -o $@ $^ libftprintf/libftprintf.a
-	@echo "[\033[32m--------------------------\033[0m]"
-	@echo "[\033[36m------ OK - Corewar ------\033[0m]"
-	@echo "[\033[32m--------------------------\033[0m]"
-	@echo "\033[32muse: ./$(NAME) [-dump nbr_cycles] [[-n number] champion1.cor] ... \033[0m"
-
-libft: logo
-	@make -C libftprintf/
-
-clean: logo
-	@echo "\033[32mCorewar :\033[0m [\033[31mSuppression des .o\033[0m]"
-	@make clean -C libftprintf/
-	@rm -f $(SRCO)
-
-fclean: logo
-	@echo "\033[32mCorewar :\033[0m [\033[31mSuppression des .o\033[0m]"
-	@rm -f $(SRCO)
-	@echo "\033[32mCorewar :\033[0m [\033[31mSuppression de $(NAME)\033[0m]"
-	@make fclean -C libftprintf/
-	@rm -f $(NAME)
 
 .PHONY: re clean fclean all libft logo
